@@ -1,0 +1,17 @@
+**Components**
+[] - Navbar
+[] - Notify
+
+**Screens**
+[] - Home 
+
+[] - invoice (
+        Table (
+            - data (format week/month/year)
+            - saldo
+            - status
+            - actions
+        )
+    )
+
+[] - invoice/:id
