@@ -1,6 +1,6 @@
 **Components**
 [] - Navbar
-[] - Notify
+[x] - Notify
 
 **Screens**
 [] - Home 
