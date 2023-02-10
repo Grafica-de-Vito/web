@@ -132,7 +132,7 @@ function Invoices() {
                 </Table.Body>
                 <Table.Pagination
                     shadow
-                    color="secondary"
+                    color="primary"
                     noMargin
                     align="center"
                     rowsPerPage={10}

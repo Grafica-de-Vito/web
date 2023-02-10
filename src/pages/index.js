@@ -1,7 +1,5 @@
-function Home() {
-    return (
-        <>Home</>
-    );
-}
+import { Navbar } from "@/components";
 
-export default Home;
+export default function Index() {
+  return <Navbar />
+}

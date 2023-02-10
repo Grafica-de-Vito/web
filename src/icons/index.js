@@ -10,5 +10,6 @@ import Send from './Send';
 import Unlock from './Unlock';
 import User from './User';
 import Pdf from './Pdf';
+import Logo from './Logo';
 
-export { Delete, Edit, Eye, Info, Lock, MoreVert, NotEdit, Search, Send, Unlock, User, Pdf };
+export { Delete, Edit, Eye, Info, Lock, MoreVert, NotEdit, Search, Send, Unlock, User, Pdf, Logo };
