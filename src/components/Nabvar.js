@@ -1,18 +1,14 @@
+import { useRouter } from "next/router";
 import { Navbar, Button, Link, Text } from "@nextui-org/react";
 import Layout from "./Layout";
 import { Logo } from "@/icons";
 
 const NavbarUI = () => {
+    const router = useRouter();
+
     const collapseItems = [
-        "Features",
-        "Customers",
-        "Pricing",
-        "Company",
-        "Legal",
-        "Team",
-        "Help & Feedback",
-        "Login",
-        "Sign Up",
+        "Home",
+        "Invoices",
     ];
 
     return (
@@ -26,12 +22,7 @@ const NavbarUI = () => {
                     </Text>
                 </Navbar.Brand>
                 <Navbar.Content enableCursorHighlight hideIn="xs" variant="underline">
-                    <Navbar.Link href="#">Features</Navbar.Link>
-                    <Navbar.Link isActive href="#">
-                        Customers
-                    </Navbar.Link>
-                    <Navbar.Link href="#">Pricing</Navbar.Link>
-                    <Navbar.Link href="#">Company</Navbar.Link>
+                    <Navbar.Link isActive={router.asPath === 'invoices'} href="#invoices" onPress={() => router.push('/invoices')}>Invoices</Navbar.Link>
                 </Navbar.Content>
                 <Navbar.Content>
                     <Navbar.Link color="inherit" href="#">

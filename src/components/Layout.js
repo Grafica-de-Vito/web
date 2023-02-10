@@ -1,4 +1,3 @@
-import { Content } from "./Content";
 import Box from "./Box";
 
 const Layout = ({ children }) => (
@@ -8,7 +7,6 @@ const Layout = ({ children }) => (
     }}
   >
     {children}
-    <Content />
   </Box>
 );
 

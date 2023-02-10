@@ -1,5 +1,3 @@
-import { Navbar } from "@/components";
-
 export default function Index() {
-  return <Navbar />
+  return <h1>Home</h1>
 }
