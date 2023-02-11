@@ -8,7 +8,7 @@ const NavbarUI = () => {
 
     const collapseItems = [
         { name: "Home", url: "/" },
-        { name: "Invoices", url: "/invoices" },
+        { name: "Registros", url: "/invoices" },
     ];
 
     // console.log(router.asPath)
@@ -17,14 +17,11 @@ const NavbarUI = () => {
         <Layout>
             <Navbar isBordered variant="sticky">
                 <Navbar.Brand>
-                    <Navbar.Toggle aria-label="toggle navigation" />
+                    <Navbar.Toggle aria-label="toggle navigation" css={{ mr: 10 }} />
                     <Logo />
-                    <Text b color="inherit" hideIn="xs">
-                        ACME
-                    </Text>
                 </Navbar.Brand>
                 <Navbar.Content enableCursorHighlight hideIn="xs" variant="underline">
-                    <Navbar.Link isActive={router.asPath === '/invoices'} onPress={() => router.push('/invoices')}>Invoices</Navbar.Link>
+                    <Navbar.Link isActive={router.asPath === '/invoices'} onPress={() => router.push('/invoices')}>Registros</Navbar.Link>
                 </Navbar.Content>
                 <Navbar.Content>
                     <Navbar.Link color="inherit" href="#">
