@@ -7,9 +7,11 @@ const NavbarUI = () => {
     const router = useRouter();
 
     const collapseItems = [
-        "Home",
-        "Invoices",
+        { name: "Home", url: "/" },
+        { name: "Invoices", url: "/invoices" },
     ];
+
+    console.log(router.asPath)
 
     return (
         <Layout>
@@ -22,7 +24,7 @@ const NavbarUI = () => {
                     </Text>
                 </Navbar.Brand>
                 <Navbar.Content enableCursorHighlight hideIn="xs" variant="underline">
-                    <Navbar.Link isActive={router.asPath === 'invoices'} href="#invoices" onPress={() => router.push('/invoices')}>Invoices</Navbar.Link>
+                    <Navbar.Link isActive={router.asPath === '/invoices'} onPress={() => router.push('/invoices')}>Invoices</Navbar.Link>
                 </Navbar.Content>
                 <Navbar.Content>
                     <Navbar.Link color="inherit" href="#">
@@ -36,15 +38,15 @@ const NavbarUI = () => {
                 </Navbar.Content>
                 <Navbar.Collapse>
                     {collapseItems.map((item, index) => (
-                        <Navbar.CollapseItem key={item}>
+                        <Navbar.CollapseItem key={index}>
                             <Link
                                 color="inherit"
                                 css={{
                                     minWidth: "100%",
                                 }}
-                                href="#"
+                                onPress={() => router.push(item.url)}
                             >
-                                {item}
+                                {item.name}
                             </Link>
                         </Navbar.CollapseItem>
                     ))}
