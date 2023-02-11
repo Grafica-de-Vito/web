@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Button, Col, Container, Input, Row, Spacer, Table, Text } from "@nextui-org/react";
 import { IconButton, StyledBadge } from "@/components";
@@ -7,15 +7,16 @@ import { Edit, Search, Eye } from "@/icons";
 function Invoices() {
     const router = useRouter();
 
-    const invoices = [
-        { id: 1, date: '09/02/2023', balance: 'R$ 100,00', status: true },
-        { id: 2, date: '05/02/2023', balance: 'R$ -200,00', status: false },
-        { id: 3, date: '02/02/2023', balance: 'R$ 250,00', status: true },
-        { id: 4, date: '25/01/2023', balance: 'R$ 10,52', status: true },
-        { id: 5, date: '20/12/2022', balance: 'R$ 00,00', status: false }
-    ];
-
     const [search, setSearch] = useState('');
+    const [invoices, setInvoices] = useState([]);
+
+    const fetchAPI = async () => {
+        await fetch('http://localhost:3000/invoices', {
+            method: 'GET',
+        }).then(response => response.json()).then(data => setInvoices(data));
+    }
+
+    useEffect(() => { fetchAPI(); }, []);
 
     const filtered = invoices?.length > 0 ? invoices.filter(item => {
         let filter = false;
