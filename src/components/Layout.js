@@ -3,7 +3,8 @@ import Box from "./Box";
 const Layout = ({ children }) => (
   <Box
     css={{
-      maxW: "100%"
+      maxW: "100%",
+      mb: 100,
     }}
   >
     {children}

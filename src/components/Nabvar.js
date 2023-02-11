@@ -11,7 +11,7 @@ const NavbarUI = () => {
         { name: "Invoices", url: "/invoices" },
     ];
 
-    console.log(router.asPath)
+    // console.log(router.asPath)
 
     return (
         <Layout>
