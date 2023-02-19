@@ -5,5 +5,6 @@ import Layout from './Layout';
 import Box from './Box';
 import Navbar from './Nabvar';
 import InvoiceForm from './invoices/Form';
+import SendButton from './SendButton';
 
-export { IconButton, StyledBadge, Notify, Layout, Box, Navbar, InvoiceForm };
+export { IconButton, StyledBadge, Notify, Layout, Box, Navbar, InvoiceForm, SendButton };
