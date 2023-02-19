@@ -13,12 +13,17 @@ const schema = yup.object({
     amount: yup.string().required("Valor é obrigatório"),
 }).required();
 
-function InvoiceForm() {
+function InvoiceForm({ cancel }) {
     const { control, handleSubmit, formState: { errors }, reset } = useForm({
         resolver: yupResolver(schema)
     });
 
     const onReset = () => reset();
+
+    const onCancel = () => {
+        onReset();
+        cancel();
+    }
 
     const onSubmit = data => console.log(data);
 
@@ -135,7 +140,7 @@ function InvoiceForm() {
                     </Row>
 
                     <Row>
-                        <Button type="button" color="error" auto css={{ m: 5 }} onPress={() => console.log('Reset all fields and hidden form', onReset())}>
+                        <Button type="button" color="error" auto css={{ m: 5 }} onPress={onCancel}>
                             Cancelar
                         </Button>
                         <Button type="submit" color="primary" auto css={{ m: 5 }}>
