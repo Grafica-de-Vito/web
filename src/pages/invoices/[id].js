@@ -26,7 +26,7 @@ function Invoice() {
     });
 
     const fetchAPI = async () => {
-        await fetch('http://localhost:3000/invoices/' + id, {
+        await fetch(process.env.NEXT_PUBLIC_API_URL + id, {
             method: 'GET',
         }).then(response => response.json()).then(data => setInvoice(data));
     }

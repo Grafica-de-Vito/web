@@ -11,7 +11,7 @@ function Invoices() {
     const [invoices, setInvoices] = useState([]);
 
     const fetchAPI = async () => {
-        await fetch('http://localhost:3000/invoices', {
+        await fetch(process.env.NEXT_PUBLIC_API_URL, {
             method: 'GET',
         }).then(response => response.json()).then(data => setInvoices(data));
     }
