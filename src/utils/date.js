@@ -8,4 +8,11 @@ function Now() {
     return `${year}-${month}-${day}`;
 }
 
-export { Now }
+// convert date US to BR
+function FormatUS(date) {
+    const [day, month, year] = date.split("/");
+
+    return `${year}-${month}-${day}`;
+}
+
+export { Now, FormatUS }

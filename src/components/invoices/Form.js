@@ -1,9 +1,13 @@
+import { toast } from "react-toastify";
+
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
 
 import { Button, Col, Container, Input, Row, Text, Textarea } from "@nextui-org/react";
 import { DateNow, FormatMoney } from "@/utils";
+import { CreateInvoiceData, UpdateInvoiceData } from "@/services/Invoice";
+import { FormatUS } from "@/utils/date";
 
 const schema = yup.object({
     date: yup.date().max(new Date(), "Data não pode ser maior que hoje").required("Data é obrigatório"),
@@ -13,7 +17,7 @@ const schema = yup.object({
     amount: yup.string().required("Valor é obrigatório"),
 }).required();
 
-function InvoiceForm({ cancel }) {
+function InvoiceForm({ id, data, cancel }) {
     const { control, handleSubmit, formState: { errors }, reset } = useForm({
         resolver: yupResolver(schema)
     });
@@ -25,7 +29,28 @@ function InvoiceForm({ cancel }) {
         cancel();
     }
 
-    const onSubmit = data => console.log(data);
+    const onSubmit = async formData => {
+        const body = {
+            ...formData,
+            id: data?.id,
+            amount: FormatMoney(formData?.amount, 'remove'),
+            type: formData.type === 'ENTRADA' ? 'INCOMING' : 'OUTGOING'
+        }
+
+        let res;
+        if(!data) {
+            res = await CreateInvoiceData(id, body);
+        } else {
+            res = await UpdateInvoiceData(id, body);
+        }
+
+        if (res.status === 200) {
+            toast.success(res?.message || "Sucesso!");
+            onCancel();
+        } else {
+            toast.error(res?.message || "Erro!");
+        }
+    }
 
     return (
         <Container fluid wrap="wrap" xs justify="center">
@@ -35,7 +60,7 @@ function InvoiceForm({ cancel }) {
                         <Controller
                             name="date"
                             control={control}
-                            defaultValue={DateNow()}
+                            defaultValue={data?.date ? FormatUS(data?.date) : DateNow()}
                             render={({ field }) =>
                                 <Input
                                     {...field}
@@ -55,7 +80,7 @@ function InvoiceForm({ cancel }) {
                         <Controller
                             name="title"
                             control={control}
-                            defaultValue={""}
+                            defaultValue={data?.title || ""}
                             render={({ field }) =>
                                 <Input
                                     {...field}
@@ -77,7 +102,7 @@ function InvoiceForm({ cancel }) {
                         <Controller
                             name="type"
                             control={control}
-                            defaultValue={"ENTRADA"}
+                            defaultValue={data?.type ? (data?.type === 'INCOMING' ? 'ENTRADA' : 'SAIDA') : "ENTRADA"}
                             render={({ field: { value, onChange, ...rest } }) =>
                                 <Input
                                     {...rest}
@@ -101,7 +126,7 @@ function InvoiceForm({ cancel }) {
                         <Controller
                             name="amount"
                             control={control}
-                            defaultValue={""}
+                            defaultValue={data?.amount || ""}
                             render={({ field: { value, onChange, ...rest } }) =>
                                 <Input
                                     {...rest}
@@ -125,7 +150,7 @@ function InvoiceForm({ cancel }) {
                         <Controller
                             name="description"
                             control={control}
-                            defaultValue={""}
+                            defaultValue={data?.description || ""}
                             render={({ field }) =>
                                 <Textarea
                                     {...field}
@@ -140,10 +165,10 @@ function InvoiceForm({ cancel }) {
                     </Row>
 
                     <Row>
-                        <Button type="button" color="error" auto css={{ m: 5 }} onPress={onCancel}>
+                        <Button type="button" color="error" auto size="md" css={{ m: 5 }} onPress={onCancel}>
                             Cancelar
                         </Button>
-                        <Button type="submit" color="primary" auto css={{ m: 5 }}>
+                        <Button type="submit" color="success" auto size="md" css={{ m: 5 }}>
                             Enviar
                         </Button>
                     </Row>

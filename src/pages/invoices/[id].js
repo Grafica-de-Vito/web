@@ -3,22 +3,26 @@ import { useRouter } from "next/router";
 
 import { toast } from "react-toastify";
 
-import { Avatar, Button, Col, Collapse, Grid, Input, Link, Row, Text } from "@nextui-org/react";
-import { InvoiceForm, Notify, SendButton } from "@/components";
-import { Add, ArrowBottom, ArrowTop, Edit, Send } from "@/icons";
+import { Avatar, Button, Col, Collapse, Container, Grid, Input, Link, Row, Spacer, Text } from "@nextui-org/react";
+import { Box, InvoiceForm, Modal, Notify, SendButton } from "@/components";
+import { Add, ArrowBottom, ArrowTop, Delete, Edit, Send } from "@/icons";
 
 import { FormatMoney } from "@/utils";
 
-import { UpdateInvoice } from "@/services/Invoice";
+import { DeleteInvoiceData, UpdateInvoice } from "@/services/Invoice";
 
 function Invoice() {
     const router = useRouter();
     const { id } = router.query;
 
     const [invoice, setInvoice] = useState();
+    const [invoiceData, setInvoiceData] = useState();
+    const [modal, setModal] = useState(false);
     const [config, setConfig] = useState({
         initial_value: false,
         add: false,
+        edit: false,
+        modal_type: '',
     });
 
     const fetchAPI = async () => {
@@ -29,11 +33,25 @@ function Invoice() {
 
     useEffect(() => { fetchAPI(); }, []);
 
-    const submitInitialValue = async () => {
-        const res = await UpdateInvoice(id, FormatMoney(invoice?.initial_value, 'remove'));
+    const deleteInvoiceData = async () => {
+        const res = await DeleteInvoiceData(id, invoiceData?.id);
         console.log(res);
 
         if (res.status === 200) {
+            await fetchAPI();
+            toast.success(res?.message || "Sucesso!");
+        } else {
+            toast.error(res?.message || "Erro!");
+        }
+
+        setModal(false);
+    }
+
+    const submitInitialValue = async () => {
+        const res = await UpdateInvoice(id, FormatMoney(invoice?.initial_value, 'remove'));
+        console.log(res, res.status);
+
+        if (res.status === 201) {
             await fetchAPI();
             setConfig({ ...config, initial_value: false });
             toast.success(res?.message || "Sucesso!");
@@ -43,12 +61,77 @@ function Invoice() {
         }
     }
 
+    const openForm = (id) => (_) => {
+        const [data] = invoice.data.filter(item => item?.id === id);
+        setInvoiceData(data);
+
+        setConfig({ ...config, edit: true });
+    }
+
+    const openModal = (id, type) => (_) => {
+        const [data] = invoice.data.filter(item => item?.id === id);
+        setInvoiceData(data);
+
+        setConfig({ ...config, modal_type: type });
+
+        setModal(true);
+    }
+
+    const RenderModalBody = () => {
+        return (
+            <>
+                {
+                    config?.modal_type === "invoice-data:delete" ?
+                        <Box>
+                            <Text>Deseja deletar o registro? Está ação irá deletar permanentemente o registro <Text b span>{invoiceData?.title}</Text>.</Text>
+                        </Box>
+                        : null
+                }
+            </>
+        );
+    }
+
+    const RenderModalFooter = () => {
+        const onClose = () => setModal(false);
+
+        return (
+            <>
+                {
+                    config?.modal_type === "invoice-data:delete" ?
+                        <Container display="flex" justify="center">
+                            <Button auto light onPress={onClose}>
+                                Cancelar
+                            </Button>
+
+                            <Spacer x={1} />
+
+                            <Button auto color="error" onPress={deleteInvoiceData}>
+                                Confirmar
+                            </Button>
+                        </Container>
+                        : null
+                }
+            </>
+        );
+    }
+
+
     return (
-        // <p>Invoice: {id}</p>
         <>
             <Notify />
 
-            {config?.add ? <InvoiceForm cancel={() => setConfig({ ...config, add: false })} /> :
+            <Modal
+                visible={modal}
+                setVisible={setModal}
+                blur={config?.modal_type === "invoice-data:delete"}
+                preventClose={config?.modal_type === "invoice-data:delete"}
+                width={'600px'}
+                header={""}
+                body={<RenderModalBody />}
+                footer={<RenderModalFooter />}
+            />
+
+            {config?.add || config?.edit ? <InvoiceForm id={id} data={invoiceData} cancel={async () => { await fetchAPI(); setInvoiceData(null), setConfig({ ...config, add: false, edit: false }); }} /> :
                 <Grid.Container gap={2} justify="center">
                     <Grid>
                         <Row justify="flex-start" css={{ mb: 50 }}>
@@ -96,6 +179,16 @@ function Invoice() {
                                 >
                                     <Text b>Descrição</Text>
                                     <Text>{item?.description || 'Nenhuma descrição disponivel.'}</Text>
+                                    <Spacer y={2} />
+                                    <Container display="flex" direction="row" wrap="wrap" justify="center" alignItems="center">
+                                        <Button icon={<Edit size={20} fill="currentColor" />} color="warning" flat auto onPress={openForm(item?.id)}>
+                                            Editar Registro
+                                        </Button>
+                                        <Spacer x={5} />
+                                        <Button icon={<Delete size={20} fill="currentColor" />} color="error" flat auto onPress={openModal(item?.id, "invoice-data:delete")}>
+                                            Deletar Registro
+                                        </Button>
+                                    </Container>
                                 </Collapse>
                             ))}
                         </Collapse.Group>
