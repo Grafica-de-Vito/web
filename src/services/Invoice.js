@@ -1,5 +1,5 @@
 async function UpdateInvoice(id, initialValue) {
-    return await fetch(process.env.NEXT_PUBLIC_API_URL + id, {
+    return await fetch(process.env.NEXT_PUBLIC_API_URL + '/invoices/' + id, {
         method: 'PUT',
         mode: 'cors',
         cache: 'no-cache',
@@ -14,7 +14,7 @@ async function UpdateInvoice(id, initialValue) {
 }
 
 async function CreateInvoiceData(id, { date, title, description, type, amount }) {
-    return await fetch(process.env.NEXT_PUBLIC_API_URL + id + '/data', {
+    return await fetch(process.env.NEXT_PUBLIC_API_URL + '/invoices/' + id + '/data', {
         method: 'POST',
         mode: 'cors',
         cache: 'no-cache',
@@ -33,7 +33,7 @@ async function CreateInvoiceData(id, { date, title, description, type, amount })
 }
 
 async function UpdateInvoiceData(invoiceId, { id: dataId, date, title, description, type, amount }) {
-    return await fetch(process.env.NEXT_PUBLIC_API_URL + invoiceId + '/data/' + dataId, {
+    return await fetch(process.env.NEXT_PUBLIC_API_URL + '/invoices/' + invoiceId + '/data/' + dataId, {
         method: 'PATCH',
         mode: 'cors',
         cache: 'no-cache',
@@ -52,7 +52,7 @@ async function UpdateInvoiceData(invoiceId, { id: dataId, date, title, descripti
 }
 
 async function DeleteInvoiceData(invoiceId, dataId) {
-    return await fetch(process.env.NEXT_PUBLIC_API_URL + invoiceId + '/data/' + dataId, {
+    return await fetch(process.env.NEXT_PUBLIC_API_URL + '/invoices/' + invoiceId + '/data/' + dataId, {
         method: 'DELETE',
         mode: 'cors',
         cache: 'no-cache',
