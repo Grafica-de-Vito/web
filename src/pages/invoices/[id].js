@@ -171,8 +171,9 @@ function Invoice() {
                         </Row>
 
                         <Collapse.Group shadow>
-                            {invoice?.data?.map(item => (
+                            {invoice?.data?.map((item, index) => (
                                 <Collapse
+                                    key={index}
                                     title={<Text h4>{item?.title}</Text>}
                                     subtitle={`${item?.date} - ${item?.amount}`}
                                     contentLeft={<Avatar squared icon={<ArrowBottom size={20} fill={item?.type === "INCOMING" ? "#17C964" : "#F31260"} />} />}
