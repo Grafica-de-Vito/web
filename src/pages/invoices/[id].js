@@ -135,22 +135,32 @@ function Invoice() {
                             <Col>
                                 <Text b size="$2xl">Valor Inicial</Text>
                                 <br />
-                                <Input
-                                    contentRightStyling={false}
-                                    readOnly={!config?.initial_value}
-                                    contentLeft={"R$"}
-                                    aria-label="Initial Value"
-                                    value={FormatMoney(invoice?.initial_value)}
-                                    onChange={(e) => setInvoice({ ...invoice, initial_value: FormatMoney(e.target.value) })}
-                                    contentRight={config?.initial_value ?
-                                        <SendButton onClick={submitInitialValue}>
-                                            <Send fill="#fff" />
-                                        </SendButton>
-                                        : <SendButton onClick={() => setConfig({ ...config, initial_value: true })}>
-                                            <Edit fill="#fff" />
-                                        </SendButton>
-                                    }
-                                />
+                                {invoice?.status ?
+                                    <Input
+                                        contentRightStyling={false}
+                                        readOnly={!config?.initial_value}
+                                        contentLeft={"R$"}
+                                        aria-label="Initial Value"
+                                        value={FormatMoney(invoice?.initial_value)}
+                                        onChange={(e) => setInvoice({ ...invoice, initial_value: FormatMoney(e.target.value) })}
+                                        contentRight={config?.initial_value ?
+                                            <SendButton onClick={submitInitialValue}>
+                                                <Send fill="#fff" />
+                                            </SendButton>
+                                            : <SendButton onClick={() => setConfig({ ...config, initial_value: true })}>
+                                                <Edit fill="#fff" />
+                                            </SendButton>
+                                        }
+                                    />
+                                    :
+                                    <Input
+                                        contentRightStyling={false}
+                                        readOnly
+                                        contentLeft={"R$"}
+                                        aria-label="Initial Value"
+                                        value={FormatMoney(invoice?.initial_value)}
+                                    />
+                                }
                             </Col>
                         </Row>
 
@@ -161,11 +171,12 @@ function Invoice() {
                             </Col>
                         </Row>
 
-                        <Row css={{ mb: 50 }}>
-                            <Col>
-                                <Button css={{ width: 'inherit' }} color="primary" bordered icon={<Add fill="#0072F5" size={32} />} onPress={() => setConfig({ ...config, add: true })} />
-                            </Col>
-                        </Row>
+                        {invoice?.status ?
+                            <Row css={{ mb: 50 }}>
+                                <Col>
+                                    <Button css={{ width: 'inherit' }} color="primary" bordered icon={<Add fill="#0072F5" size={32} />} onPress={() => setConfig({ ...config, add: true })} />
+                                </Col>
+                            </Row> : null}
 
                         <Collapse.Group shadow>
                             {invoice?.data?.map((item, index) => (
@@ -173,20 +184,25 @@ function Invoice() {
                                     key={index}
                                     title={<Text h4>{item?.title}</Text>}
                                     subtitle={`${item?.date} - ${item?.amount}`}
-                                    contentLeft={<Avatar squared icon={<ArrowBottom size={20} fill={item?.type === "INCOMING" ? "#17C964" : "#F31260"} />} />}
+                                    contentLeft={<Avatar squared icon={item?.type === "INCOMING" ? <ArrowBottom size={20} fill="#17C964" /> : <ArrowTop size={20} fill={"#F31260"} />} />}
                                 >
                                     <Text b>Descrição</Text>
                                     <Text>{item?.description || 'Nenhuma descrição disponivel.'}</Text>
+
                                     <Spacer y={2} />
-                                    <Container display="flex" direction="row" wrap="wrap" justify="center" alignItems="center">
-                                        <Button icon={<Edit size={20} fill="currentColor" />} color="warning" flat auto onPress={openForm(item?.id)}>
-                                            Editar Registro
-                                        </Button>
-                                        <Spacer x={5} />
-                                        <Button icon={<Delete size={20} fill="currentColor" />} color="error" flat auto onPress={openModal(item?.id, "invoice-data:delete")}>
-                                            Deletar Registro
-                                        </Button>
-                                    </Container>
+
+                                    {invoice?.status ?
+                                        <Container display="flex" direction="row" wrap="wrap" justify="center" alignItems="center">
+                                            <Button icon={<Edit size={20} fill="currentColor" />} color="warning" flat auto onPress={openForm(item?.id)}>
+                                                Editar Registro
+                                            </Button>
+                                            <Spacer x={5} />
+                                            <Button icon={<Delete size={20} fill="currentColor" />} color="error" flat auto onPress={openModal(item?.id, "invoice-data:delete")}>
+                                                Deletar Registro
+                                            </Button>
+                                        </Container>
+                                        : null}
+
                                 </Collapse>
                             ))}
                         </Collapse.Group>
