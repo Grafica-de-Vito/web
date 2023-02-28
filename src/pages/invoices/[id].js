@@ -35,7 +35,6 @@ function Invoice() {
 
     const deleteInvoiceData = async () => {
         const res = await DeleteInvoiceData(id, invoiceData?.id);
-        console.log(res);
 
         if (res.status === 200) {
             await fetchAPI();
@@ -49,14 +48,12 @@ function Invoice() {
 
     const submitInitialValue = async () => {
         const res = await UpdateInvoice(id, FormatMoney(invoice?.initial_value, 'remove'));
-        console.log(res, res.status);
 
-        if (res.status === 201) {
+        if (res.status === 200) {
             await fetchAPI();
             setConfig({ ...config, initial_value: false });
             toast.success(res?.message || "Sucesso!");
         } else {
-            // Initial value is invalid
             toast.error(res?.message || "Erro!");
         }
     }
