@@ -38,7 +38,7 @@ function Invoice() {
 
         if (res.status === 200) {
             await fetchAPI();
-            toast.success(res?.message || "Sucesso!");
+            toast.success(res?.message || "Deletado com sucesso!");
         } else {
             toast.error(res?.message || "Erro!");
         }
@@ -47,12 +47,12 @@ function Invoice() {
     }
 
     const submitInitialValue = async () => {
-        const res = await UpdateInvoice(id, FormatMoney(invoice?.initial_value, 'remove'));
+        const res = await UpdateInvoice(id, FormatMoney(invoice?.initial_value, 'remove') || 0);
 
         if (res.status === 200) {
             await fetchAPI();
             setConfig({ ...config, initial_value: false });
-            toast.success(res?.message || "Sucesso!");
+            toast.success(res?.message || "Valor inicial alterado com sucesso!");
         } else {
             toast.error(res?.message || "Erro!");
         }

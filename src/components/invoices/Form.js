@@ -45,7 +45,7 @@ function InvoiceForm({ id, data, cancel }) {
         }
 
         if (res.status === 200 || res.status === 201) {
-            toast.success(res?.message || "Sucesso!");
+            toast.success(res?.message || (!data ? "Criado com sucesso!" : "Alterad com sucesso!"));
             onCancel();
         } else {
             toast.error(res?.message || "Erro!");
